@@ -1,4 +1,3 @@
-import pymongo
 import re
 
 from scrapy.spider import Spider
