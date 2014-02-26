@@ -8,5 +8,10 @@ class Hotel(Item):
     price_range = Field()
 
 class Review(Item):
+	hotel_id = Field()
 	review_id = Field()
-	text = Field()
+	review_text = Field()
+	review_date = Field()
+	author_location = Field()
+	author_name = Field()
+	author_id = Field()

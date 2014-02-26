@@ -6,6 +6,7 @@ from scrapy.selector import HtmlXPathSelector, Selector
 from scrapy.http.request import Request
 from scrapy.conf import settings
 from spiderman.items import Review as ReviewItem
+from spiderman.spiders.parserman import get_review_id, get_review_text, get_review_location, get_author, get_date
 
 
 class Review(Spider):
@@ -34,12 +35,26 @@ class Review(Spider):
         if review_url and response.url.find('/Hotel_Review') != -1:
             yield Request("http://www.tripadvisor.com" + review_url, self.parse)
 
+        #Goes through the next page if any
+        next_page_url = sel.xpath('//a[contains(@class, "guiArw sprite-pageNext")]/@href').extract()
+        if next_page_url and len(next_page_url) > 0:
+            next_page = "http://www.tripadvisor.com" + next_page_url[0]
+            yield Request(next_page, self.parse)
+
+
         #If the crawler is at a review web site, collect the reviews
         if response.url.find('/ShowUserReviews') != -1:
 
-            reviews_text = sel.xpath("//div[@class='entry']//p").extract()
+            reviews = sel.xpath("//div[contains(@id, 'review_')]").extract()
+            hotel_id = re.search('d[0-9]+', response.url).group(0)
 
-            for review_text in (reviews_text):
+            for review_text in reviews:
                 review_item = ReviewItem()
-                review_item['text'] = review_text
+                review_item['hotel_id'] = hotel_id
+                review_item['review_id'] = get_review_id(review_text)
+                review_item['review_text'] = get_review_text(review_text)
+                review_item['review_date'] = get_date(review_text) 
+                review_item['author_location'] = get_review_location(review_text)
+                review_item['author_name'] = get_author(review_text)
+
                 yield review_item
