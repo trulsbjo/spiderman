@@ -13,7 +13,7 @@ class Review(Spider):
     name = "review"
     allowed_domains = ["tripadvisor.com"]
     start_urls = ["http://www.tripadvisor.com/Hotels-g60763-New_York_City_New_York-Hotels"]
-
+    
 
     def parse(self, response):
 
@@ -26,6 +26,7 @@ class Review(Spider):
         if hotel_urls:
             for hotel_url in hotel_urls:
                 yield Request("http://www.tripadvisor.com" + hotel_url, self.parse)
+                self.crawler.stats.inc_value('number_of_hotels_crawled')
 
         #Extract the first review url
         review_url = sel.xpath('//div[contains(@class, "quote")]//a/@href').extract()[0]
