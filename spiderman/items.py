@@ -12,6 +12,12 @@ class Review(Item):
 	review_id = Field()
 	review_text = Field()
 	review_date = Field()
+	review_helpful = Field()
+	review_rating = Field()
+
 	author_location = Field()
 	author_name = Field()
+	author_reviews = Field()
+	author_hotel_reviews = Field()
+	author_helpful_votes = Field()
 	author_id = Field()

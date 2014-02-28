@@ -5,7 +5,7 @@ from scrapy.selector import HtmlXPathSelector, Selector
 from scrapy.http.request import Request
 from scrapy.conf import settings
 from spiderman.items import Review as ReviewItem
-from spiderman.spiders.parserman import get_review_id, get_review_text, get_review_location, get_author, get_date
+from spiderman.spiders.parserman import *
 
 
 class Review(Spider):
@@ -53,7 +53,14 @@ class Review(Spider):
                 review_item['review_id'] = get_review_id(review_text)
                 review_item['review_text'] = get_review_text(review_text)
                 review_item['review_date'] = get_date(review_text) 
+                review_item['review_helpful'] = get_helpfullness(review_text)
+                review_item['review_rating'] = get_review_rating(review_text)
+
                 review_item['author_location'] = get_review_location(review_text)
                 review_item['author_name'] = get_author(review_text)
+                review_item['author_reviews'] = get_author_reviews(review_text)
+                review_item['author_hotel_reviews'] = get_author_hotel_reviews(review_text)
+                review_item['author_helpful_votes'] = get_author_helpful_votes(review_text)
+
 
                 yield review_item
