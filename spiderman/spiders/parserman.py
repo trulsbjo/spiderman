@@ -22,7 +22,7 @@ def get_date(html_doc):
 	if value.has_key('title'):
 		return value['title']
 	else:
-		return soup.find('span', {'class' : 'ratingDate'}).text.replace("Reviewed ", "")
+		return soup.find('span', {'class' : 'ratingDate'}).text.replace("Reviewed ", "").replace("\n", "")
 
 def get_author_reviews(html_doc):
 	soup = BeautifulSoup(html_doc)
